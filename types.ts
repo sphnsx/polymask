@@ -12,7 +12,7 @@ export interface Man {
   id: string;
   name: string;
   alias: string;
-  archetype: string; // e.g., "Logic_Audit", "Emotion_Bomb"
+  archetype: string; 
   riskFactor: string;
   dialogueStyle: string;
   status: 'Active' | 'Suspicious' | 'Broken';
@@ -24,13 +24,19 @@ export interface GameOption {
   text: string;
   risk: 'Low' | 'Medium' | 'High' | 'Critical';
   type: string; // "Lie", "Gaslight", "Trait", etc.
+  // New fields for static scenarios
+  effect?: { fatigue: number; suspicion: number };
+  result?: string;
+  requirement?: string;
 }
 
 export interface Scenario {
+  id?: string;
   aggressorId: string;
   aggressorName: string;
   description: string;
   options: GameOption[];
+  tags?: string[];
 }
 
 export interface TurnResult {
@@ -40,11 +46,16 @@ export interface TurnResult {
   survived: boolean;
 }
 
+export type TimeOfDay = 'Morning' | 'Afternoon' | 'Evening';
+
 export interface GameStats {
   suspicion: number;
   fatigue: number;
-  turn: number;
-  maxTurns: number;
+  day: number;
+  timeOfDay: TimeOfDay;
+  // Tracking for daily summary
+  dailyStartSuspicion: number;
+  dailyStartFatigue: number;
 }
 
 export enum GamePhase {
@@ -52,6 +63,7 @@ export enum GamePhase {
   PERSONA_SELECT,
   DRAFT,
   PLAYING,
+  DAILY_SUMMARY,
   GAME_OVER,
   VICTORY
 }
